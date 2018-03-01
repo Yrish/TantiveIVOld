@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Testing Webpage</title>
+		<script src="https://cdn.jsdelivr.net/npm/vue@2.5.13/dist/vue.js"></script>
+	</head>
+	<body>
+		<div id=tools>
+			<input v-model="itemToAdd">
+			<button v-on:click="subItem">-</button>
+			<button v-on:click="addItem">+</button>
+			<ol>
+				<todo-item
+					v-for="item in list"
+					v-bind:todo="item"
+					v-bind:key="item.id"></todo-item>
+			</ol>
+		</div>
+		<script>
+			Vue.component('todo-item', {props: ['todo'], template: '<li>{{todo.text}}'})
+		var tools = new Vue
+		({
+			el: "#tools",
+			data: {list: [{id: 0, text: "Add some stuff"}]},
+			methods: 
+			{
+				addItem: function () 
+				{
+					this.list.push({id: this.list.length, text: this.itemToAdd})
+				},
+				subItem: function () 
+				{
+					this.list.pop()
+				}
+			}
+		})
+		</script>
+	</body>
+</html>
