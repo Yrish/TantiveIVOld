@@ -1,0 +1,160 @@
+<!doctype html>
+<html>
+	<head>
+		<script src="https://cdn.jsdelivr.net/npm/vue@2.5.13/dist/vue.js"></script>
+		<style>
+			#all {
+				height: 100%;
+				width: 100%;
+				display: grid;
+				grid-template-columns: 100px calc(100% - 110px);
+				grid-gap: 10px;
+			}
+			#toolbar {
+				background-color: #eee;
+			}
+			#body {
+				background-color: #eee;
+				text-align: center;
+			}
+			.cmp {
+				background-color: #ddd;
+				margin: 10px;
+				padding: 10px;
+			}
+			.cmpwrapper {
+				display: grid;
+				grid-template-columns: calc(100%-20px) 20px;
+			}
+		</style>
+	</head>
+	<body>
+		<div id=all>
+			<div id=toolbar>
+				<ul id=toollist>
+					<tool v-for='tool in tools'
+								:tool='tool'
+								:key='tool.id'></tool>
+				</ul>
+			</div>
+			<div id=body>
+				<comp v-for='comp in comps'
+							:comp='comp'
+							:key=comp.id></comp>
+			</div>
+		</div>
+		<script>
+			//UNIVERSAL STATE
+			function newTool(name, comp) {
+				return {name: name, comp: comp}
+			}
+			function makeComp(tool) {
+				return {tool: tool, contents: {}}
+			}
+			var state = {
+				components: [],
+				addComponent (tool) {
+					this.components.push(makeComp(tool))
+				},
+				removeComponent (comp) {
+					this.components.splice(this.components.indexOf(comp), 1)
+				}
+			}
+			//TOOLBAR
+			var tool = {
+				props: ['tool'],
+				template: '<span>\
+										<li>{{ tool.name }}</li>\
+										<button @click="add(tool)">+</button>\
+									</span>',
+				methods: {
+					add: function(tool) {
+						state.addComponent(tool)
+					}
+				}
+			}
+			var toolbar = new Vue({
+				el: '#toolbar',
+				data: {
+					tools: [newTool("Text", "textComp"),
+									newTool("Blockly", "blocklyComp"),
+									newTool("Video", "videoComp")]
+				},
+				components: {
+					'tool': tool
+				}
+			})
+			//EDITABLE THINGS
+			Vue.component('editable-text', {
+				props: ['text'],
+				data: function () {
+					return {editing: false,
+									newText: this.text}
+				},
+				template: '<span>\
+										<span v-if="!editing" @click="editing = true">{{text}}</span>\
+										<span v-if="editing">\
+											<input v-model="newText"></input>\
+											<button @click="complete">DONE</button>\
+										</span>\
+									</span>',
+				methods: {
+					complete: function () {
+						this.editing = false
+						this.$emit('update', this.newText)
+					}
+				}
+			})
+			//COMPONENT LIST
+			var comp = {
+				name: 'comp',
+				props: ['comp'],
+				template: '<span class="cmpwrapper">\
+										<component v-bind:is="comp.tool.comp" :comp="comp"></component>\
+										<button @click="remove(comp)">-</button>\
+									</span>',
+				methods: {
+					remove: function (comp) {
+						state.removeComponent(comp)
+					}
+				}
+			}
+			Vue.component('textComp', {
+				props: ['comp'],
+				created() {
+					if (this.comp.contents.title == null) {
+						Vue.set(this.comp.contents, 'title', 'Title Here')
+					}
+					if (this.comp.contents.text == null) {
+						Vue.set(this.comp.contents, 'text', 'Lorem Ipsum')
+					}
+				},
+				template: '<div class="cmp">\
+										<h2><editable-text :text="comp.contents.title"\
+																			@update="function (value) {comp.contents.title = value}"></editable-text></h2>\
+										<p><editable-text :text="comp.contents.text"\
+																			@update="function (value) {comp.contents.text = value}"></editable-text></p>\
+									</div>'
+			})
+			Vue.component('blocklyComp', {
+				props: ['comp'],
+				template: '<div class="cmp">iamblockly\
+									</div>'
+			})
+			Vue.component('videoComp', {
+				props: ['comp'],
+				template: '<div class="cmp">iamvideo\
+									</div>'
+			})
+			var body = new Vue({
+				el: '#body',
+				data: {
+					comps: state.components
+				},
+				components: {
+					'comp': comp
+				}
+			})
+		</script>
+	</body>
+</html>
