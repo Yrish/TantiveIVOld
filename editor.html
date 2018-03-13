@@ -87,7 +87,7 @@
 			})
 			//EDITABLE THINGS
 			Vue.component('editable-text', {
-				props: ['text'],
+				props: ['text', 'isLarge'],
 				data: function () {
 					return {editing: false,
 									newText: "",
@@ -95,17 +95,21 @@
 				},
 				template: '<span>\
 										<span v-if="!editing">\
-											<span v-if="newText.length == 0" @click="editing = true">{{initial}}</span>\
+											<span v-if="!isEmpty(newText)" @click="editing = true">{{initial}}</span>\
 											<span v-if="newText.length > 0" @click="editing = true">{{text}}</span>\
 										</span>\
 										<span v-if="editing">\
-											<textarea v-model="newText" :placeholder="initial" @keyup="keyPressed"></textarea>\
+											<input v-if="!isLarge" v-model="newText" :placeholder="initial" @keyup="keyPressed"></input>\
+											<textarea v-if="isLarge" v-model="newText" :placeholder="initial" @keyup="keyPressed"></textarea>\
 											<button @click="complete">✓</button>\
 										</span>\
 									</span>',
 				methods: {
+					isEmpty: function (str) {
+						return /\S/.test(str)
+					},
 					keyPressed: function (e) {
-						if (e.keyCode == 13) {
+						if (!this.isLarge && e.keyCode == 13) {
 							this.complete()
 						}
 					},
@@ -141,8 +145,10 @@
 				},
 				template: '<div class="cmp">\
 										<h2><editable-text :text="comp.contents.title"\
+																			:isLarge="false"\
 																			@update="function (value) {comp.contents.title = value}"></editable-text></h2>\
 										<p><editable-text :text="comp.contents.text"\
+																			:isLarge="true"\
 																			@update="function (value) {comp.contents.text = value}"></editable-text></p>\
 									</div>'
 			})
