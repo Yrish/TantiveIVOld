@@ -159,8 +159,25 @@
 			})
 			Vue.component('videoComp', {
 				props: ['comp'],
-				template: '<div class="cmp">iamvideo\
-									</div>'
+				created() {
+					if (this.comp.contents.url == null) {
+						Vue.set(this.comp.contents, 'url', 'vjnqABgxfO0')
+					}
+				},
+				template: '<div class="cmp">\
+										<p></p><editable-text :text="comp.contents.url"\
+																					:isLarge="false"\
+																					@update="function (value) {comp.contents.url = value}"></editable-text></p>\
+										<iframe width="560" height="315" :src="youtubeify(comp.contents.url)" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>\
+									</div>',
+				methods: {
+					youtubeify: function (videoID) {
+						return "https://www.youtube.com/embed/" + videoID
+					},
+					updateUrl: function (videoID) {
+						Vue.set(this.comp.contents, 'url', videoID)
+					}
+				}
 			})
 			var body = new Vue({
 				el: '#body',
