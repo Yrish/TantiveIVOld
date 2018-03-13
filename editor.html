@@ -99,11 +99,16 @@
 											<span v-if="newText.length > 0" @click="editing = true">{{text}}</span>\
 										</span>\
 										<span v-if="editing">\
-											<input v-model="newText" :placeholder="initial"></input>\
+											<input v-model="newText" :placeholder="initial" @keyup="keyPressed"></input>\
 											<button @click="complete">DONE</button>\
 										</span>\
 									</span>',
 				methods: {
+					keyPressed: function (e) {
+						if (e.keyCode == 13) {
+							this.complete()
+						}
+					},
 					complete: function () {
 						this.editing = false
 						this.$emit('update', this.newText)
