@@ -99,7 +99,7 @@
 											<span v-if="newText.length > 0" @click="editing = true">{{text}}</span>\
 										</span>\
 										<span v-if="editing">\
-											<input v-model="newText" :placeholder="initial" @keyup="keyPressed"></input>\
+											<textarea v-model="newText" :placeholder="initial" @keyup="keyPressed"></textarea>\
 											<button @click="complete">✓</button>\
 										</span>\
 									</span>',
