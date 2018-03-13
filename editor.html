@@ -90,12 +90,16 @@
 				props: ['text'],
 				data: function () {
 					return {editing: false,
-									newText: this.text}
+									newText: "",
+									initial: this.text}
 				},
 				template: '<span>\
-										<span v-if="!editing" @click="editing = true">{{text}}</span>\
+										<span v-if="!editing">\
+											<span v-if="newText.length == 0" @click="editing = true">{{initial}}</span>\
+											<span v-if="newText.length > 0" @click="editing = true">{{text}}</span>\
+										</span>\
 										<span v-if="editing">\
-											<input v-model="newText"></input>\
+											<input v-model="newText" :placeholder="initial"></input>\
 											<button @click="complete">DONE</button>\
 										</span>\
 									</span>',
