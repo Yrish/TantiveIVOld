@@ -171,7 +171,8 @@
 										<iframe width="560" height="315" :src="youtubeify(comp.contents.url)" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>\
 									</div>',
 				methods: {
-					youtubeify: function (videoID) {
+					youtubeify: function (fullUrl) {
+						var videoID = fullUrl.substring(fullUrl.indexOf("=") + 1, fullUrl.indexOf("=") + 12)
 						return "https://www.youtube.com/embed/" + videoID
 					},
 					updateUrl: function (videoID) {
