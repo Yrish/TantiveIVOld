@@ -1,0 +1,109 @@
+body {
+  background-color: Black;
+  width:100%;
+  margin: 0px;
+  padding: 0px;
+  display: flex;
+  flex-flow: column;
+  height:100vh;
+}
+
+body * {
+  margin: 0px;
+  padding: 0px;
+}
+
+.body-partition {
+  border-right-style: solid;
+  border-right-color: green;
+  border-right-width: 5px;
+  height: 100%;
+}
+
+.header {
+  background-color: blanchedalmond;
+  width: 100%;
+  height: 50px;
+  margin: 0px;
+  padding: 0px;
+  border-bottom-style: solid;
+  border-bottom-color: green;
+  border-bottom-width: 2px;
+  flex: 0 1 auto;
+}
+
+.body {
+  background-color: white;
+  flex: 1 1 auto;
+}
+
+.body > * {
+  display: table-cell;
+}
+
+.content {
+  display: table;
+  table-layout: fixed;
+  height: 100%;
+}
+
+.quick-cuts {
+  height: 100%;
+  display: inline;
+  vertical-align: middle;
+}
+
+.quick-cuts * {
+  display: inline;
+  vertical-align: middle;
+}
+
+.cut-element {
+  padding-right: 50px;
+}
+
+.user-elements {
+  position: relative;
+  float: right;
+  margin-right: 50px;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.user-element {
+  display: inline;
+  vertical-align: middle;
+  padding-left: 50px;
+}
+
+.user-element * {
+  display: inline;
+  vertical-align: middle;
+  padding-left: 50px;
+}
+
+.footer {
+  background-color: blue;
+  display: block;
+  flex: 0 1 auto;
+}
+
+.footer * {
+  display: inline;
+
+}
+
+.card {
+  border-style: solid;
+  border-radius: 6px;
+  border-width: 3px;
+  border-color: black;
+}
+
+.login {
+  border-color: darkgreen;
+  background-color: blanchedalmond;
+  vertical-align: middle;
+  width: 33%;
+  height: 250px;
+}

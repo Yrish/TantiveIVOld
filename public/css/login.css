@@ -1,0 +1,13 @@
+.body > * {
+  display: block;
+  vertical-align: middle;
+  position: absolute;
+  margin: auto;
+  padding: inherit;
+}
+
+.body {
+  position: relative;
+  display: flex;
+  min-height: 300px;
+}
