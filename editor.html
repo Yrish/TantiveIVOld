@@ -1,49 +1,40 @@
 <!doctype html>
 <html>
 	<head>
-		<script src="https://cdn.jsdelivr.net/npm/vue@2.5.13/dist/vue.js"></script>
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 		<style>
 			#all {
-				height: 100%;
-				width: 100%;
-				display: grid;
-				grid-template-columns: 100px calc(100% - 110px);
-				grid-gap: 10px;
 			}
 			#toolbar {
 				background-color: #aaa;
 			}
 			#body {
 				background-color: #eee;
-				text-align: center;
 			}
 			.cmp {
-				overflow-wrap: break-word;
 			}
 			.cmpwrapper {
-				display: grid;
-				grid-template-columns: auto 20px;
 				background-color: #ddd;
-				margin: 10px;
-				padding: 10px;
 			}
 		</style>
 	</head>
 	<body>
 		<div id=all>
-			<div id=toolbar>
-				<ul id=toollist>
-					<tool v-for='tool in tools'
-								:tool='tool'
-								:key='tool.id'></tool>
-				</ul>
-			</div>
-			<div id=body>
+			<div id=body class="contaier-fluid d-flex flex-column p-2 m-2">
 				<comp v-for='comp in comps'
 							:comp='comp'
 							:key=comp.id></comp>
 			</div>
+			<div id=toolbar class="container-fluid d-flex justify-content-center p-2">
+				<tool v-for='tool in tools'
+							:tool='tool'
+							:key='tool.id'></tool>
+			</div>
 		</div>
+		<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+		<script src="https://cdn.jsdelivr.net/npm/vue@2.5.13/dist/vue.js"></script>
 		<script>
 			//UNIVERSAL STATE
 			function newTool(name, comp) {
@@ -64,9 +55,8 @@
 			//TOOLBAR
 			var tool = {
 				props: ['tool'],
-				template: '<span>\
-										<li>{{ tool.name }}</li>\
-										<button @click="add(tool)">+</button>\
+				template: '<span id="tool">\
+										<button @click="add(tool)">{{ tool.name }}</button>\
 									</span>',
 				methods: {
 					add: function(tool) {
@@ -123,7 +113,7 @@
 			var comp = {
 				name: 'comp',
 				props: ['comp'],
-				template: '<span class="cmpwrapper">\
+				template: '<span class="text-justify">\
 										<component v-bind:is="comp.tool.comp" :comp="comp"></component>\
 										<button @click="remove(comp)">-</button>\
 									</span>',
