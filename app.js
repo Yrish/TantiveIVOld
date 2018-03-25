@@ -45,6 +45,20 @@ app.use(session({
   },
 }))
 
+//middle ware for getting user
+app.use((req, res, next) => {
+  if (req.session && req.session.userID) {
+    mongoose.connection.models.Account.find({_id: req.session.userID}, (err, docs) => {
+      if (err || !docs) {
+        next()
+      }
+      req.User = docs[0]
+      next()
+    })
+  }
+  next()
+})
+
 app.use(passport.initialize())
 app.use(passport.session())
 
@@ -61,33 +75,37 @@ passport.deserializeUser(Account.deserializeUser())
 app.use('/accounts', require('./routes/accounts'))
 
 app.get('/', (req, res) => {
-  console.log("########")
-  console.log(req.session.user)
-  res.send(`${req.user ? req.user.username ? req.user.username: 'bad user' : '<a href="accounts/login">sign in</a>'}`)
+  res.send(`${req.User ? req.User.username ? req.User.username: 'bad user' : '<a href="accounts/login">sign in</a>'}`)
+})
+
+app.get('/html/:name', (req, res) => {
+  res.render(__dirname + "/views/"+ req.props.name)
+})
+
+//404
+app.get('*', (req, res) => {
+  res.status(404)
+  res.render('Error404', {input: `path ${req.url} does not exist`})
 })
 
 //error handling
-app.use((req, res, next) => {
-  const err = new Error("Not Found")
-  err.status(404)
-  next(err)
-})
 
 if (app.get('env') === 'development') {
   app.use(function(err, req, res, next) {
-    res.status(err.status || 500)
-    res.render('error', {
-      message: err.message,
-      error: err
-    })
+    //res.status(err.status || 500)
+    console.error(err)
+    // res.render('error', {
+    //   message: err.message,
+    //   error: err
+    // })
   })
 }
 
 // production error handler
 // no stacktraces leaked to user
-app.use(function(err, req, res, next) {
-  res.status(err.status || 500);
-  console.log(err)
-});
+// app.use(function(err, req, res, next) {
+//   res.status(err.status || 500);
+//   console.log(err)
+// });
 
 module.exports = app;

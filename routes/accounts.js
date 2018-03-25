@@ -7,15 +7,11 @@ router.get('/register', (req, res) => {
 })
 
 router.post('/register', (req, res) => {
-  console.log("Got it")
-  console.log(`Registering user: '${req.body.username}'`)
   Account.register(new Account({username:req.body.username, email:req.body.email}), req.body.password, (err) => {
     if (err) {
       console.err(`An error occured while registering:\n\t${err}`)
       return next(err)
     }
-
-    console.log('user successfully registered!')
 
     res.redirect('/')
   })
@@ -26,14 +22,14 @@ router.get('/login', (req, res) => {
 })
 
 router.post('/login', passport.authenticate('local'), (req, res) => {
-  console.log("Logged in")
-  console.log(`user: ${req.user}`)
-  req.session.user = req.user
+  req.session.userID = req.user._id
   req.session.save()
   res.redirect('/')
 })
 
 router.get('/logout', (req, res) => {
+  req.session.userID = null
+  req.session.save()
   req.logout()
   res.redirect('/')
 })

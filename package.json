@@ -3,7 +3,10 @@
   "version": "1.0.0",
   "description": "this",
   "scripts": {
-    "start": "node ./bin/www"
+    "start": "node ./bin/www",
+    "start-dev": "nodemon ./bin/www",
+    "standard": "cd reactapps/standard && yarn start",
+    "dev": "concurrently --kill-others --prefix [{name}] --names server,app -c green,blue \"yarn start-dev\" \"yarn standard\""
   },
   "author": "",
   "license": "ISC",
