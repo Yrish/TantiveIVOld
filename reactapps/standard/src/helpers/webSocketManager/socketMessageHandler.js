@@ -1,4 +1,5 @@
 import types from "../../types"
+import {addToCookie} from "../cookies"
 
 export default (event) => {
   if (typeof event.data !== 'string') {
@@ -21,15 +22,18 @@ export default (event) => {
     console.error(`[Socket] Error, unable to handle message type: ${type}`)
     return
   }
-  if (type == types.ERROR) {
-    console.error(`[Socket] Error, error from server: \n${data}`)
-    return
-  }
   messageFunctions[type](data)
 }
 
 var messageFunctions = {
+  [types.ERROR]: (data) => {
+    console.error(`[Socket] Error the following is all we know:`)
+    console.log(data)
+  },
   [types.PRINT]: (data) => {
     console.log(data)
+  },
+  [types.SET_COOKIE]: (data) => {
+    addToCookie(data)
   }
 }

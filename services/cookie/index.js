@@ -1,5 +1,7 @@
 const config = require("../../config")
 const types = require("../../types")
+const cookieNames = require("./cookieNames")
+const SignCookie = require("cookie-signature")
 
 //default cookie options
 const DEFAULT_OPTIONS = {
@@ -17,6 +19,20 @@ const expressSessionCookieConfig = {
   maxAge: 24 * 60 * 60 * 1000,
 }
 
+function getCookie(data, req) {
+  if (!data) {
+    return
+  }
+  ({cookieName} = data)
+  if (!cookieNames[cookieName]) {
+    console.log(`Could not find cookie name:`)
+    return
+  }
+  if (cookieName == cookieNames.SESSION) {
+    return makeCookieSendable(createSessionCookie(req.sessionID))
+  }
+}
+
 function createCookie(name, value, options) {
   //create correct options
   options = Object.assign({}, DEFAULT_OPTIONS, options)
@@ -31,10 +47,10 @@ function createCookie(name, value, options) {
 
 }
 
-function makeCookieSendable(cookie, serverCode=ADD_TO_COOKIE) {
+function makeCookieSendable(cookie) {
   return JSON.stringify({
-    type: serverCode,
-    payload: cookie,
+    type: types.SET_COOKIE,
+    data: cookie,
   })
 }
 
@@ -46,4 +62,5 @@ module.exports = {
   makeCookieSendable,
   createSessionCookie,
   expressSessionCookieConfig,
+  getCookie,
 }

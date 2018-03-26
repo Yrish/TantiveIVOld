@@ -38,7 +38,7 @@ app.set('view engine', 'ejs')
 app.use(session({
   secret: config.sessionSecret,
   name: config.cookieSessionKey,
-  resave: true,
+  resave: false,
   saveUninitialized: true,
   store: new MongoStore({
     mongooseConnection: sessionStore,
