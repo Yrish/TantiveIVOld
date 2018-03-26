@@ -15,17 +15,17 @@ export default class LoginCard extends Component {
   render() {
     return (
       <div id="login-card">
-        <h2 class="title">Login</h2>
+        <h2 className="title">Login</h2>
         <form id="login-form" onSubmit={this.onSubmit}>
-          <div class="element">
+          <div className="element">
             <label>Username</label>
             <input type="text" name="username" placeholder="username" onChange={this.onChange}/>
           </div>
-          <div class="element">
+          <div className="element">
             <label>Password</label>
             <input type="password" name="password" placeholder="password" onChange={this.onChange}/>
           </div>
-          <div class="buttons">
+          <div className="buttons">
             <input type="submit" value="login"/>
           </div>
         </form>

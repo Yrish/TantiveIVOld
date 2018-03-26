@@ -10,12 +10,19 @@ const localStrategy = require('passport-local').Strategy
 const mongoConnectionPath = 'mongodb://localhost'
 const sessionStore = mongoose.createConnection(`${mongoConnectionPath}/sessions`)
 
+const {expressSessionCookieConfig} = require('./services/cookie')
+
+//ws handling
+const enableWs = require('express-ws')
+const wsHandler = require('./services/websocket/webSocketHandler')
+
 //sessions
 let session = require('express-session')
 const MongoStore = require('connect-mongo')(session)
 
 //app
 const app = express()
+enableWs(app)
 
 //connect to database
 mongoose.connect(`${mongoConnectionPath}/accounts`, (error) => {
@@ -24,8 +31,7 @@ mongoose.connect(`${mongoConnectionPath}/accounts`, (error) => {
   }
 })
 
-//place for view engine
-
+//view engine ejs
 app.set('view engine', 'ejs')
 
 // set up session storage
@@ -37,12 +43,7 @@ app.use(session({
   store: new MongoStore({
     mongooseConnection: sessionStore,
   }),
-  cookie: {
-    httpOnly: false,
-    secure: false,
-    domain: config.domain,
-    maxAge: 24 * 60 * 60 * 1000,
-  },
+  cookie: expressSessionCookieConfig,
 }))
 
 //middle ware for getting user
@@ -71,6 +72,11 @@ passport.use(new localStrategy(Account.authenticate()))
 
 passport.serializeUser(Account.serializeUser())
 passport.deserializeUser(Account.deserializeUser())
+
+//websocket
+app.ws('/ws', wsHandler)
+
+//routes
 
 app.use('/accounts', require('./routes/accounts'))
 
