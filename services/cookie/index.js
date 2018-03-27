@@ -6,7 +6,7 @@ const SignCookie = require("cookie-signature")
 //default cookie options
 const DEFAULT_OPTIONS = {
   path: "/",
-  domain: config.sessionDomain,
+  domain: config.domain,
   maxAge: 7 * 24 * 60 * 60 * 1000,
   secure: false
 }
@@ -15,7 +15,7 @@ const DEFAULT_OPTIONS = {
 const expressSessionCookieConfig = {
   httpOnly: false,
   secure: false,
-  domain: config.sessionDomain,
+  domain: config.domain,
   maxAge: 24 * 60 * 60 * 1000,
 }
 

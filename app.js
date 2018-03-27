@@ -8,7 +8,7 @@ const passport = require('passport')
 const localStrategy = require('passport-local').Strategy
 
 const mongoConnectionPath = 'mongodb://localhost'
-const sessionStore = mongoose.createConnection(`${mongoConnectionPath}/sessions`)
+const sessionStore = mongoose.createConnection(`${mongoConnectionPath}/tantiveiv`)
 
 const {expressSessionCookieConfig} = require('./services/cookie')
 
@@ -25,7 +25,7 @@ const app = express()
 enableWs(app)
 
 //connect to database
-mongoose.connect(`${mongoConnectionPath}/accounts`, (error) => {
+mongoose.connect(`${mongoConnectionPath}/tantiveiv`, (error) => {
   if (error){
     console.error(`Could not connect to mongoose (check to see if it is running)\n\tError Details: ${error}`)
   }
@@ -38,7 +38,7 @@ app.set('view engine', 'ejs')
 app.use(session({
   secret: config.sessionSecret,
   name: config.cookieSessionKey,
-  resave: false,
+  resave: true,
   saveUninitialized: true,
   store: new MongoStore({
     mongooseConnection: sessionStore,
